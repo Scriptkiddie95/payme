@@ -15,6 +15,7 @@ Eine modulare, sichere Node.js-Anwendung, die folgendes leistet:
 ---
 
 ## 🌐 Architektur (Mermaid Diagramm)
+```mermaid
 graph LR
 
   subgraph Externe
@@ -45,7 +46,7 @@ graph LR
   Update --> Archiv --> DUO
   DB --> UI
   Update --> Logs
-
+```
 
 > Dieser Graph zeigt, wie DUO-Exporte automatisch in dein Finanzsystem importiert werden können – z. B. für Lohnbuchhaltung, Kreditoren oder interne Zahlungsauslösung.
 
