@@ -15,28 +15,27 @@ Eine modulare, sichere Node.js-Anwendung, die folgendes leistet:
 ---
 
 ## 🌐 Architektur (Mermaid Diagramm)
-
 graph TD
 
-DUO_EXPORT[DATEV Unternehmen Online Export (ZIP)] --> ZIP_EXTRACT[Entpacken + Validieren]
-ZIP_EXTRACT --> CSV_PARSE[CSV/XLSX parsen]
-CSV_PARSE --> MAPPING[mappings.json Lookup]
-MAPPING --> DB_IMPORT[PostgreSQL Import]
+DUOExport[DUO Export ZIP] --> ZipExtract[ZIP entpacken]
+ZipExtract --> CSVParse[CSV/XLSX parsen]
+CSVParse --> Mapping[mappings.json verwenden]
+Mapping --> DBImport[In Datenbank speichern]
 
-DB_IMPORT --> MAPPER[ISO20022 Mapper]
-MAPPER --> PAIN[pain.001 Generator]
-PAIN --> EBICS_SEND[EBICS Client Senden]
-EBICS_SEND --> BANK[Bank Server]
-BANK --> EBICS_RECV[EBICS Client Empfang]
-EBICS_RECV --> CAMT_PARSE[camt.053/054 Parser]
+DBImport --> Mapper[ISO20022 Mapper]
+Mapper --> Pain[pain.001 erstellen]
+Pain --> EbicsSend[EBICS Zahlung senden]
+EbicsSend --> Bank[Bankserver]
+Bank --> EbicsRecv[EBICS Antwort empfangen]
+EbicsRecv --> CamtParse[camt.053/054 parsen]
 
-CAMT_PARSE --> CAMT_MAP[ISO20022 Feedback Mapper]
-CAMT_MAP --> DB_STORE[Zahlungsstatus aktualisieren]
-DB_STORE --> DUO_SYNC[DUO Archiv Upload]
+CamtParse --> CamtMap[Bankantwort mappen]
+CamtMap --> DBUpdate[Status aktualisieren]
+DBUpdate --> DuoSync[DUO Archiv Upload]
 
-DUO_SYNC --> DUO_EXPORT
-CAMT_PARSE --> LOGGING[Fehler + Logging]
-DB_STORE --> DASHBOARD[Status API / Monitoring]
+DuoSync --> DUOExport
+CamtParse --> Log[Fehler & Logging]
+DBUpdate --> Dashboard[Monitoring UI]
 
 
 
