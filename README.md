@@ -202,8 +202,6 @@ graph TD
   AWS --> DSGVO
   AWS --> ISO
 
-
-
 ```
 
 Finanzplanung und ToDo's in den nächsten zwei Wochen
