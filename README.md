@@ -166,7 +166,7 @@ graph TD
   end
 
   subgraph Datenquelle
-    OCR[OCR Textract (optional)]
+    OCR[OCR Textract optional]
     MAN[Manuelle Eingabe]
   end
 
