@@ -156,6 +156,7 @@ npm run run-import
 ---
 
 ## Projekt umfang visualisiert:
+
 ```mermaid
 graph TD
   subgraph Zielgruppe
@@ -217,7 +218,7 @@ graph TD
   LOGS --> DSGVO
   AWS --> DSGVO
   AWS --> ISO
-```
+
 
 Finanzplanung und ToDo's in den nächsten zwei Wochen
 
