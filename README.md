@@ -157,10 +157,6 @@ npm run run-import
 
 ## Projekt umfang visualisiert:
 ```mermaid
-## Projektumfang visuell erklärt – mit Admin-Logik
-
-
-```mermaid
 graph TD
   subgraph Zielgruppe
     KMU[KMU]
