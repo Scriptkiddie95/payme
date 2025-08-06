@@ -15,28 +15,40 @@ Eine modulare, sichere Node.js-Anwendung, die folgendes leistet:
 ---
 
 ## 🌐 Architektur (Mermaid Diagramm)
-graph TD
+graph LR
 
-DUOExport[DUO Export ZIP] --> ZipExtract[ZIP entpacken]
-ZipExtract --> CSVParse[CSV/XLSX parsen]
-CSVParse --> Mapping[mappings.json verwenden]
-Mapping --> DBImport[In Datenbank speichern]
+  %% 1. Unternehmen + DUO als Datenquelle
+  subgraph Externe Datenquellen
+    DUO[DATEV Unternehmen Online ZIP Export]
+    Bank[Bank Rückmeldung (camt.053/054)]
+  end
 
-DBImport --> Mapper[ISO20022 Mapper]
-Mapper --> Pain[pain.001 erstellen]
-Pain --> EbicsSend[EBICS Zahlung senden]
-EbicsSend --> Bank[Bankserver]
-Bank --> EbicsRecv[EBICS Antwort empfangen]
-EbicsRecv --> CamtParse[camt.053/054 parsen]
+  %% 2. Import & Verarbeitung (Serverseitig)
+  subgraph Backend (System Hero Core)
+    ZIP[ZIP entpacken + CSV/XLSX parsen]
+    Mapping[mappings.json anwenden]
+    DB[(PostgreSQL: Zahlungen + Status)]
+    PainGen[pain.001 Generator]
+    EBICSSend[EBICS Zahlung senden]
+    EBICSRecv[EBICS Antwort empfangen]
+    CAMTParser[camt.053/054 verarbeiten]
+    StatusUpdate[Status aktualisieren]
+    DuoArchiv[Archiv-Rückspiel zu DUO]
+  end
 
-CamtParse --> CamtMap[Bankantwort mappen]
-CamtMap --> DBUpdate[Status aktualisieren]
-DBUpdate --> DuoSync[DUO Archiv Upload]
+  %% 3. Darstellung + Steuerung
+  subgraph Frontend (Web UI)
+    Dashboard[Monitoring + Statusanzeige]
+    Log[Fehlerlogs]
+  end
 
-DuoSync --> DUOExport
-CamtParse --> Log[Fehler & Logging]
-DBUpdate --> Dashboard[Monitoring UI]
-
+  %% 4. Verbindungen
+  DUO --> ZIP --> Mapping --> DB
+  DB --> PainGen --> EBICSSend --> Bank
+  Bank --> EBICSRecv --> CAMTParser --> StatusUpdate --> DB
+  StatusUpdate --> DuoArchiv --> DUO
+  DB --> Dashboard
+  StatusUpdate --> Log
 
 
 > Dieser Graph zeigt, wie DUO-Exporte automatisch in dein Finanzsystem importiert werden können – z. B. für Lohnbuchhaltung, Kreditoren oder interne Zahlungsauslösung.
