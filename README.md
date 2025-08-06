@@ -16,31 +16,33 @@ Eine modulare, sichere Node.js-Anwendung, die folgendes leistet:
 
 ## 🌐 Architektur (Mermaid Diagramm)
 
-```mermaid
-graph TD
-  A[DUO CSV / XLSX Upload] -->|Parse| B[DUO Adapter]
-  B --> C[DataMapper ISO20022]
-  C --> D[pain.001 Generator]
-  D --> E[EBICS Client]
-  E --> F[Bank Server]
-  F -->|camt.053/054| G[EBICS Client]
-  G --> H[ISO20022 Parser]
-  H --> I[Mapped Output for DUO]
-  I --> J[DUO Upload]
-```
+flowchart TD
 
-### 📥 Zusatzgraph: Automatischer DUO → System Hero Importpfad
+%% DATENEXPORT AUS DUO
+DUO_EXPORT[DATEV Unternehmen Online Export (ZIP)] --> ZIP_EXTRACT[Entpacken + Validieren]
+ZIP_EXTRACT --> CSV_PARSE[CSV/XLSX parsen]
+CSV_PARSE --> MAPPING[mappings.json Lookup]
+MAPPING --> DB_IMPORT[PostgreSQL Import]
 
-```mermaid
-graph TD
-  A1[DATEV Unternehmen Online] -->|Export ZIP| B1[Watcher / Cronjob EC2]
-  B1 --> C1[ZIP-Extraktion + Validierung]
-  C1 --> D1[CSV/XLSX Parser]
-  D1 --> E1[mappings.json Lookup]
-  E1 --> F1[PostgreSQL Import]
-  F1 --> G1[Webhook → Zahlungsmodul]
-  G1 --> H1[Dashboard/API]
-```
+%% KONVERTIERUNG & ZAHLUNGSVORBEREITUNG
+DB_IMPORT --> MAPPER[ISO20022 Mapper]
+MAPPER --> PAIN[pain.001 Generator]
+PAIN --> EBICS_SEND[EBICS Client Senden]
+
+%% BANKKOMMUNIKATION
+EBICS_SEND --> BANK[Bank Server]
+BANK --> EBICS_RECV[EBICS Client Empfang]
+EBICS_RECV --> CAMT_PARSE[camt.053/054 Parser]
+
+%% ZAHLUNGSFEEDBACK
+CAMT_PARSE --> CAMT_MAP[ISO20022 Feedback Mapper]
+CAMT_MAP --> DB_STORE[Zahlungsstatus aktualisieren]
+DB_STORE --> DUO_SYNC[DUO Archiv Upload]
+
+%% KREISLAUF VERBINDUNGEN
+DUO_SYNC --> DUO_EXPORT
+CAMT_PARSE --> LOGGING[Fehler + Logging]
+DB_STORE --> DASHBOARD[Status API / Monitoring]
 
 > Dieser Graph zeigt, wie DUO-Exporte automatisch in dein Finanzsystem importiert werden können – z. B. für Lohnbuchhaltung, Kreditoren oder interne Zahlungsauslösung.
 
