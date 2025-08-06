@@ -17,38 +17,34 @@ Eine modulare, sichere Node.js-Anwendung, die folgendes leistet:
 ## 🌐 Architektur (Mermaid Diagramm)
 graph LR
 
-  %% 1. Unternehmen + DUO als Datenquelle
-  subgraph Externe Datenquellen
-    DUO[DATEV Unternehmen Online ZIP Export]
-    Bank[Bank Rückmeldung (camt.053/054)]
+  subgraph Externe
+    DUO[DUO ZIP Export]
+    Bank[Bank camt Rückmeldung]
   end
 
-  %% 2. Import & Verarbeitung (Serverseitig)
-  subgraph Backend (System Hero Core)
-    ZIP[ZIP entpacken + CSV/XLSX parsen]
-    Mapping[mappings.json anwenden]
-    DB[(PostgreSQL: Zahlungen + Status)]
-    PainGen[pain.001 Generator]
-    EBICSSend[EBICS Zahlung senden]
-    EBICSRecv[EBICS Antwort empfangen]
-    CAMTParser[camt.053/054 verarbeiten]
-    StatusUpdate[Status aktualisieren]
-    DuoArchiv[Archiv-Rückspiel zu DUO]
+  subgraph Backend
+    Unzip[ZIP entpacken]
+    Parse[CSV parsen]
+    Map[mapping.json anwenden]
+    DB[(PostgreSQL DB)]
+    Gen[pain.001 generieren]
+    Send[EBICS senden]
+    Recv[EBICS empfangen]
+    Camt[camt.053 verarbeiten]
+    Update[Status aktualisieren]
+    Archiv[DUO Archiv Update]
   end
 
-  %% 3. Darstellung + Steuerung
-  subgraph Frontend (Web UI)
-    Dashboard[Monitoring + Statusanzeige]
-    Log[Fehlerlogs]
+  subgraph Frontend
+    UI[Dashboard]
+    Logs[Fehlerlogs]
   end
 
-  %% 4. Verbindungen
-  DUO --> ZIP --> Mapping --> DB
-  DB --> PainGen --> EBICSSend --> Bank
-  Bank --> EBICSRecv --> CAMTParser --> StatusUpdate --> DB
-  StatusUpdate --> DuoArchiv --> DUO
-  DB --> Dashboard
-  StatusUpdate --> Log
+  DUO --> Unzip --> Parse --> Map --> DB
+  DB --> Gen --> Send --> Bank --> Recv --> Camt --> Update --> DB
+  Update --> Archiv --> DUO
+  DB --> UI
+  Update --> Logs
 
 
 > Dieser Graph zeigt, wie DUO-Exporte automatisch in dein Finanzsystem importiert werden können – z. B. für Lohnbuchhaltung, Kreditoren oder interne Zahlungsauslösung.
