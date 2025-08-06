@@ -343,7 +343,7 @@ graph TD
 
   %% Externe Systeme
   subgraph Clients-Frontend-Nutzer]
-    CEO[CEO.ToDo-Freigabe.UI]
+    CEO[CEO-ToDo-Freigabe-UI]
     USER[(User-Interface KMU, Shops, Freelancer)]
   end
 
