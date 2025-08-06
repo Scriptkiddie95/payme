@@ -191,7 +191,7 @@ graph TD
   end
 
   subgraph Bank
-    BANK_API[Bankschnittstelle (EBICS)]
+    BANK_API[Bankschnittstelle EBICS]
     CAMT[camt.053 Rückmeldung]
   end
 
