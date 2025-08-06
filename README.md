@@ -177,7 +177,7 @@ graph TD
     EBICSSend[EBICS Senden]
     EBICSRecv[EBICS Empfangen]
     STATUS[Freigabe-Logik & Limits]
-    STORE[Datenbank (PostgreSQL / DynamoDB)]
+    STORE[Datenbank]
   end
 
   subgraph Compliance
@@ -188,45 +188,41 @@ graph TD
   end
 
   subgraph Infrastruktur
-    EC2[EC2 (Docker, EBICS)]
-    S3[S3 (Backups, Archiv)]
-    Logs[CloudWatch Logs]
-    Secrets[AWS Secrets Manager]
+    EC2[EC2 (Docker)]
+    S3[S3 Backup]
+    Logs[CloudWatch]
+    Secrets[Secrets Manager]
     WAF[Shield / WAF]
-    MAIL[SES (TAN / Reports)]
+    MAIL[SES Mail]
   end
 
-  %% Zielgruppe → Frontend
   KMU --> WebUI
   DEV --> WebUI
   SHOPS --> PWA
   SOLO --> WebUI
 
-  %% Frontend → Backend
   WebUI --> STATUS
   PWA --> STATUS
 
-  %% Backend-Fluss
-  STATUS --> ISOGen --> EBICSSend --> EBICSRecv
+  STATUS --> ISOGen
   OCR --> ISOGen
+  ISOGen --> EBICSSend --> EBICSRecv
   EBICSRecv --> STORE
   STATUS --> STORE
 
-  %% Logging & Output
   STORE --> Logs
   Logs --> GOBD
   STORE --> WebUI
 
-  %% Infrastruktur-Kopplung
   EC2 --> EBICSSend
   S3 --> STORE
   Secrets --> EBICSSend
   MAIL --> WebUI
 
-  %% Compliance-Verbindung
   DSGVO --> EC2
   ISO --> WAF
   AVV --> Secrets
+
 ```
 
 Finanzplanung und ToDo's in den nächsten zwei Wochen
