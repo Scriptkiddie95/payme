@@ -166,62 +166,43 @@ graph TD
     SOLO[Selbstständige]
   end
 
-  subgraph Frontend
-    PWA[PWA / Telegram-Bot]
-    WebUI[One-Click Freigabe UI]
-  end
-
-  subgraph Backend
+  subgraph Datenquelle
     OCR[OCR Textract (optional)]
-    ISOGen[pain.001 Generator]
-    EBICSSend[EBICS Senden]
-    EBICSRecv[EBICS Empfangen]
-    STATUS[Freigabe-Logik & Limits]
-    STORE[Datenbank]
+    MAN[Manuelle Eingabe]
   end
 
-  subgraph Compliance
-    DSGVO[DSGVO]
-    ISO[ISO 27001]
-    GOBD[GoBD]
-    AVV[AV-Vertrag]
+  subgraph App
+    AGENTS[Agenten filtern + sortieren Rechnungen]
+    TODO[Freigabe durch CEO/Prokurist]
+    PAIN[pain.001 Generator]
+    EBICSSend[EBICS Zahlung senden]
+    Status[Zahlungsstatus speichern]
   end
 
   subgraph Infrastruktur
-    EC2[EC2 (Docker)]
-    S3[S3 Backup]
-    Logs[CloudWatch]
-    Secrets[Secrets Manager]
-    WAF[Shield / WAF]
-    MAIL[SES Mail]
+    AWS[AWS (Frankfurt)]
+    LOG[Audit + GoBD Logs]
+    DSGVO[DSGVO Schutzkonzept]
+    ISO[ISO 27001 optional]
   end
 
-  KMU --> WebUI
-  DEV --> WebUI
-  SHOPS --> PWA
-  SOLO --> WebUI
+  KMU --> OCR
+  DEV --> MAN
+  SHOPS --> OCR
+  SOLO --> MAN
 
-  WebUI --> STATUS
-  PWA --> STATUS
+  OCR --> AGENTS
+  MAN --> AGENTS
+  AGENTS --> TODO
+  TODO --> PAIN
+  PAIN --> EBICSSend
+  EBICSSend --> Status
+  Status --> LOG
+  Status --> AWS
+  AWS --> DSGVO
+  AWS --> ISO
 
-  STATUS --> ISOGen
-  OCR --> ISOGen
-  ISOGen --> EBICSSend --> EBICSRecv
-  EBICSRecv --> STORE
-  STATUS --> STORE
 
-  STORE --> Logs
-  Logs --> GOBD
-  STORE --> WebUI
-
-  EC2 --> EBICSSend
-  S3 --> STORE
-  Secrets --> EBICSSend
-  MAIL --> WebUI
-
-  DSGVO --> EC2
-  ISO --> WAF
-  AVV --> Secrets
 
 ```
 
