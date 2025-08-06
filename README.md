@@ -258,7 +258,7 @@ graph LR
     PAIN[pain.001 Generator]
     EBICS[EBICS Sende-Einheit]
     STATUS[Zahlungsstatus speichern]
-    DB[PostgreSQL Datenbank]
+    DB[(PostgreSQL Datenbank)]
   end
 
   subgraph AdminSystem
@@ -307,7 +307,67 @@ graph LR
   AWS --> DSGVO
   AWS --> ISO
 ```
+---
 
+## V03 zur visualisierung 
+```mermaid
+graph TD
+
+  %% Netzarchitektur
+  subgraph VPC[Amazon VPC (Isolierter Bereich)]
+    subgraph PublicSubnet[Public Subnet (DMZ)]
+      ALB[Application Load Balancer]
+      CI_CD[CI/CD Gateway (z. B. GitHub Actions, CodeDeploy)]
+    end
+
+    subgraph PrivateSubnet[Private Subnet (Sicherheitszone)]
+      API[Backend API (EBICS, pain.001, camt.053)]
+      WORKER[Worker & Job Queues]
+      OCR_SERVICE[OCR Verarbeiter]
+      ADMIN_CTRL[Admin Meta-Controller]
+      DB[(PostgreSQL DB)]
+      LOG[CloudWatch + Audit]
+    end
+
+    ALB --> API
+    CI_CD --> API
+    CI_CD --> OCR_SERVICE
+    API --> DB
+    API --> WORKER
+    WORKER --> DB
+    API --> OCR_SERVICE
+    ADMIN_CTRL --> API
+    ADMIN_CTRL --> LOG
+    LOG --> DB
+  end
+
+  %% Externe Systeme
+  subgraph Clients[Frontend & Nutzer]
+    CEO[CEO ToDo-Freigabe UI]
+    USER[User-Interface (KMU, Shops, Freelancer)]
+  end
+
+  subgraph ExternalBank[Externe Bank EBICS-API]
+    EBICS_API[EBICS Sende-Empfang]
+    CAMT_API[camt.053 API]
+  end
+
+  USER --> ALB
+  CEO --> ALB
+  API --> EBICS_API
+  EBICS_API --> CAMT_API
+  CAMT_API --> API
+
+  %% DSGVO/ISO Layer
+  subgraph Compliance[Compliance Layer]
+    DSGVO[DSGVO Konzept]
+    ISO[ISO27001 Framework]
+  end
+
+  LOG --> DSGVO
+  DB --> ISO
+  API --> ISO
+```
 ---
 
 ### 🔍 Erläuterung (Lesefluss von oben nach unten):
