@@ -162,7 +162,7 @@ graph TD
   subgraph Zielgruppe
     KMU[KMU]
     DEV[Entwickler]
-    SHOPS[Shops / E-Com]
+    SHOPS[Shops / E-Commerce]
     SOLO[Selbstständige]
   end
 
@@ -172,36 +172,39 @@ graph TD
   end
 
   subgraph App
-    AGENTS[Agenten filtern + sortieren Rechnungen]
-    TODO[Freigabe durch CEO/Prokurist]
+    AGENTS[Agenten sortieren Belege]
+    TODO[ToDo-Freigabe durch CEO]
     PAIN[pain.001 Generator]
-    EBICSSend[EBICS Zahlung senden]
-    Status[Zahlungsstatus speichern]
+    EBICSSend[EBICS Senden]
+    STATUS[Zahlungsstatus speichern]
   end
 
   subgraph Infrastruktur
-    AWS[AWS (Frankfurt)]
-    LOG[Audit + GoBD Logs]
-    DSGVO[DSGVO Schutzkonzept]
+    AWS[AWS Frankfurt]
+    LOGS[CloudWatch Logs]
+    DSGVO[DSGVO Konzept]
     ISO[ISO 27001 optional]
   end
 
+  %% Verbindungen Zielgruppe
   KMU --> OCR
   DEV --> MAN
   SHOPS --> OCR
   SOLO --> MAN
 
+  %% Verarbeitung
   OCR --> AGENTS
   MAN --> AGENTS
   AGENTS --> TODO
   TODO --> PAIN
   PAIN --> EBICSSend
-  EBICSSend --> Status
-  Status --> LOG
-  Status --> AWS
+  EBICSSend --> STATUS
+
+  %% Logging & Compliance
+  STATUS --> LOGS
+  LOGS --> DSGVO
   AWS --> DSGVO
   AWS --> ISO
-
 ```
 
 Finanzplanung und ToDo's in den nächsten zwei Wochen
