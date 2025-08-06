@@ -157,7 +157,7 @@ npm run run-import
 
 ## Projekt umfang visualisiert:
 ```mermaid
-graph LR
+graph TD
   subgraph Zielgruppe
     KMU[KMU]
     DEV[Entwickler]
@@ -180,7 +180,7 @@ graph LR
     PAIN[pain.001 Generator]
     EBICS[EBICS Sende-Einheit]
     STATUS[Zahlungsstatus speichern]
-    DB[(PostgreSQL DB)]
+    DB[(PostgreSQL Datenbank)]
   end
 
   subgraph AdminSystem
@@ -202,26 +202,33 @@ graph LR
     ISO[ISO 27001 optional]
   end
 
-  %% Datenfluss von Zielgruppen zur App
-  KMU --> OCR --> AGENTS
-  DEV --> MAN --> AGENTS
+  KMU --> OCR
+  DEV --> MAN
   SHOPS --> OCR
   SOLO --> MAN
-  AGENTS --> TODO --> PAIN --> EBICS --> BANK_API
-  BANK_API --> CAMT --> STATUS --> DB
+  OCR --> AGENTS
+  MAN --> AGENTS
+  AGENTS --> TODO
+  TODO --> PAIN
+  PAIN --> EBICS
+  EBICS --> BANK_API
+  BANK_API --> CAMT
+  CAMT --> STATUS
+  STATUS --> DB
 
-  %% AdminSystem Connections
-  ADMIN_UI --> ADMIN_BACK --> ROUTING --> EBICS
+  ADMIN_UI --> ADMIN_BACK
+  ADMIN_BACK --> ROUTING
+  ROUTING --> EBICS
   ROUTING --> AGENTS
   ROUTING --> BANK_API
-  ADMIN_BACK --> POLICIES --> LOGS
-
-  %% Logging & Compliance
+  ADMIN_BACK --> POLICIES
+  POLICIES --> LOGS
   STATUS --> LOGS
   AWS --> LOGS
   LOGS --> DSGVO
   AWS --> DSGVO
   AWS --> ISO
+
 
 ```
 
