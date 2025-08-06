@@ -155,6 +155,84 @@ npm run run-import
 
 ---
 
+## Projekt umfang visualisiert:
+```mermaid
+graph TD
+
+  subgraph Zielgruppe
+    KMU[KMU]
+    DEV[Entwickler]
+    SHOPS[Shops / E-Com]
+    SOLO[Selbstständige]
+  end
+
+  subgraph Frontend
+    PWA[PWA / Telegram-Bot]
+    WebUI[One-Click Freigabe UI]
+  end
+
+  subgraph Backend
+    OCR[OCR Textract (optional)]
+    ISOGen[pain.001 Generator]
+    EBICSSend[EBICS Senden]
+    EBICSRecv[EBICS Empfangen]
+    STATUS[Freigabe-Logik & Limits]
+    STORE[Datenbank (PostgreSQL / DynamoDB)]
+  end
+
+  subgraph Compliance
+    DSGVO[DSGVO]
+    ISO[ISO 27001]
+    GOBD[GoBD]
+    AVV[AV-Vertrag]
+  end
+
+  subgraph Infrastruktur
+    EC2[EC2 (Docker, EBICS)]
+    S3[S3 (Backups, Archiv)]
+    Logs[CloudWatch Logs]
+    Secrets[AWS Secrets Manager]
+    WAF[Shield / WAF]
+    MAIL[SES (TAN / Reports)]
+  end
+
+  %% Zielgruppe → Frontend
+  KMU --> WebUI
+  DEV --> WebUI
+  SHOPS --> PWA
+  SOLO --> WebUI
+
+  %% Frontend → Backend
+  WebUI --> STATUS
+  PWA --> STATUS
+
+  %% Backend-Fluss
+  STATUS --> ISOGen --> EBICSSend --> EBICSRecv
+  OCR --> ISOGen
+  EBICSRecv --> STORE
+  STATUS --> STORE
+
+  %% Logging & Output
+  STORE --> Logs
+  Logs --> GOBD
+  STORE --> WebUI
+
+  %% Infrastruktur-Kopplung
+  EC2 --> EBICSSend
+  S3 --> STORE
+  Secrets --> EBICSSend
+  MAIL --> WebUI
+
+  %% Compliance-Verbindung
+  DSGVO --> EC2
+  ISO --> WAF
+  AVV --> Secrets
+```
+
+Finanzplanung und ToDo's in den nächsten zwei Wochen
+
+---
+
 ## 🔧 Ziel erreicht?
 
 > Wenn System Hero Zahlungen senden, empfangen, auswerten und rechtssicher speichern kann – ohne manuelles Eingreifen.
