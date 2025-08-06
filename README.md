@@ -157,8 +157,12 @@ npm run run-import
 
 ## Projekt umfang visualisiert:
 ```mermaid
+## Projektumfang visuell erklärt – mit Admin-Logik
+
+```mermaid
 graph TD
 
+  %% === ZIELGRUPPE ===
   subgraph Zielgruppe
     KMU[KMU]
     DEV[Entwickler]
@@ -166,19 +170,42 @@ graph TD
     SOLO[Selbstständige]
   end
 
+  %% === DATENQUELLE ===
   subgraph Datenquelle
     OCR[OCR Textract (optional)]
     MAN[Manuelle Eingabe]
   end
 
-  subgraph App
+  %% === FRONTEND ===
+  subgraph Frontend
+    UI[Benutzer-Oberfläche]
     AGENTS[Agenten sortieren Belege]
-    TODO[ToDo-Freigabe durch CEO]
-    PAIN[pain.001 Generator]
-    EBICSSend[EBICS Senden]
-    STATUS[Zahlungsstatus speichern]
+    TODO[ToDo: Zahlung freigeben]
   end
 
+  %% === BACKEND ===
+  subgraph Backend
+    PAIN[pain.001 Generator]
+    EBICS[EBICS Sende-Einheit]
+    STATUS[Zahlungsstatus speichern]
+    DB[(PostgreSQL Datenbank)]
+  end
+
+  %% === ADMIN-SYSTEM ===
+  subgraph Admin-System (Meta-Ebene)
+    ADMIN_UI[Admin-Dashboard]
+    ADMIN_BACK[Meta-Controller & Audit]
+    POLICIES[Compliance-Policies]
+    ROUTING[Routing & Queue Mgmt]
+  end
+
+  %% === EXTERNE BANKEN ===
+  subgraph Externe Bank
+    BANK_API[Bankschnittstelle (EBICS)]
+    CAMT[camt.053 Rückmeldung]
+  end
+
+  %% === INFRASTRUKTUR ===
   subgraph Infrastruktur
     AWS[AWS Frankfurt]
     LOGS[CloudWatch Logs]
@@ -186,28 +213,70 @@ graph TD
     ISO[ISO 27001 optional]
   end
 
-  %% Verbindungen Zielgruppe
-  KMU --> OCR
-  DEV --> MAN
+  %% === VERBINDUNGEN ===
+
+  %% Datenquellen zu Frontend
+  KMU --> OCR --> AGENTS
+  DEV --> MAN --> AGENTS
   SHOPS --> OCR
   SOLO --> MAN
 
-  %% Verarbeitung
-  OCR --> AGENTS
-  MAN --> AGENTS
-  AGENTS --> TODO
-  TODO --> PAIN
-  PAIN --> EBICSSend
-  EBICSSend --> STATUS
+  %% Frontend zu Backend
+  AGENTS --> TODO --> PAIN --> EBICS --> BANK_API
+  BANK_API --> CAMT --> STATUS --> DB
 
-  %% Logging & Compliance
+  %% Admin Layer beobachtet & verbindet alles
+  ADMIN_UI --> ADMIN_BACK --> ROUTING --> EBICS
+  ROUTING --> AGENTS
+  ROUTING --> BANK_API
+  ADMIN_BACK --> POLICIES --> LOGS
+
+  %% Backend Logging & Compliance
   STATUS --> LOGS
+  AWS --> LOGS
   LOGS --> DSGVO
   AWS --> DSGVO
   AWS --> ISO
 ```
 
 Finanzplanung und ToDo's in den nächsten zwei Wochen
+
+
+---
+
+### 🔍 Erläuterung (Lesefluss von oben nach unten):
+
+- **Zielgruppen** starten Prozesse → geben Rechnungen rein (OCR / Manuell)
+- **Frontend** sortiert & bietet **ToDo-Freigabe**
+- **Backend** generiert & versendet `pain.001` via **EBICS**
+- **Bankschnittstelle** meldet per `camt.053` zurück
+- **Admin-System** ist die neutrale **Monopoly-Bank**, verbindet alles, beobachtet alles, steuert alle Schnittstellen & sorgt für DSGVO/ISO/GoBD-Konformität
+
+---
+
+### 🎯 Zielbezug
+
+> Keine Zahlung ohne menschliche Freigabe. Das System ist vollständig modular, auditierbar und auf ISO 27001 skalierbar.
+
+---
+
+### ✅ Next Steps
+
+1. **[ ]** Mermaid-Block in `README.md` einfügen und mit GitHub Markdown Renderer prüfen  
+2. **[ ]** `Admin-System` später in echte RBAC-Logik (Role-Based Access Control) übersetzen  
+3. **[ ]** API-Diagramm für `/authorize`, `/validate`, `/send`, `/status` erstellen  
+4. **[ ]** Weitere pain/camt Typen auflisten → `pain.008`, `camt.054`, etc. (wenn gewünscht, liefere ich)
+
+---
+
+🤖 Willst du als Nächstes:
+
+1. `API-Routing-Diagramm` (technische Sicht)?
+2. `pain.*` / `camt.*` Typen + deren Zweck?
+3. Canvas/Whiteboard-Vorlage zum Weiterplanen?
+
+Wähl 1–3 oder sag was du brauchst.
+
 
 ---
 
