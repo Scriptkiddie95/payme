@@ -314,14 +314,14 @@ graph LR
 graph TD
 
   %% Netzarchitektur
-  subgraph VPC[Amazon VPC (Isolierter Bereich)]
+  subgraph VPC[(Amazon VPC Isolierter Bereich)]
     subgraph PublicSubnet[Public Subnet (DMZ)]
       ALB[Application Load Balancer]
       CI_CD[CI/CD Gateway (z. B. GitHub Actions, CodeDeploy)]
     end
 
-    subgraph PrivateSubnet[Private Subnet (Sicherheitszone)]
-      API[Backend API (EBICS, pain.001, camt.053)]
+    subgraph PrivateSubnet[(Private Subnet Sicherheitszone)]
+      API[(Backend API EBICS, pain.001, camt.053)]
       WORKER[Worker & Job Queues]
       OCR_SERVICE[OCR Verarbeiter]
       ADMIN_CTRL[Admin Meta-Controller]
@@ -344,7 +344,7 @@ graph TD
   %% Externe Systeme
   subgraph Clients[Frontend & Nutzer]
     CEO[CEO ToDo-Freigabe UI]
-    USER[User-Interface (KMU, Shops, Freelancer)]
+    USER[(User-Interface KMU, Shops, Freelancer)]
   end
 
   subgraph ExternalBank[Externe Bank EBICS-API]
