@@ -18,31 +18,26 @@ Eine modulare, sichere Node.js-Anwendung, die folgendes leistet:
 
 flowchart TD
 
-%% DATENEXPORT AUS DUO
 DUO_EXPORT[DATEV Unternehmen Online Export (ZIP)] --> ZIP_EXTRACT[Entpacken + Validieren]
 ZIP_EXTRACT --> CSV_PARSE[CSV/XLSX parsen]
 CSV_PARSE --> MAPPING[mappings.json Lookup]
 MAPPING --> DB_IMPORT[PostgreSQL Import]
 
-%% KONVERTIERUNG & ZAHLUNGSVORBEREITUNG
 DB_IMPORT --> MAPPER[ISO20022 Mapper]
 MAPPER --> PAIN[pain.001 Generator]
 PAIN --> EBICS_SEND[EBICS Client Senden]
-
-%% BANKKOMMUNIKATION
 EBICS_SEND --> BANK[Bank Server]
 BANK --> EBICS_RECV[EBICS Client Empfang]
 EBICS_RECV --> CAMT_PARSE[camt.053/054 Parser]
 
-%% ZAHLUNGSFEEDBACK
 CAMT_PARSE --> CAMT_MAP[ISO20022 Feedback Mapper]
 CAMT_MAP --> DB_STORE[Zahlungsstatus aktualisieren]
 DB_STORE --> DUO_SYNC[DUO Archiv Upload]
 
-%% KREISLAUF VERBINDUNGEN
 DUO_SYNC --> DUO_EXPORT
 CAMT_PARSE --> LOGGING[Fehler + Logging]
 DB_STORE --> DASHBOARD[Status API / Monitoring]
+
 
 > Dieser Graph zeigt, wie DUO-Exporte automatisch in dein Finanzsystem importiert werden können – z. B. für Lohnbuchhaltung, Kreditoren oder interne Zahlungsauslösung.
 
