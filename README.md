@@ -159,10 +159,9 @@ npm run run-import
 ```mermaid
 ## Projektumfang visuell erklärt – mit Admin-Logik
 
+
 ```mermaid
 graph TD
-
-  %% === ZIELGRUPPE ===
   subgraph Zielgruppe
     KMU[KMU]
     DEV[Entwickler]
@@ -170,20 +169,17 @@ graph TD
     SOLO[Selbstständige]
   end
 
-  %% === DATENQUELLE ===
   subgraph Datenquelle
     OCR[OCR Textract (optional)]
     MAN[Manuelle Eingabe]
   end
 
-  %% === FRONTEND ===
   subgraph Frontend
     UI[Benutzer-Oberfläche]
     AGENTS[Agenten sortieren Belege]
     TODO[ToDo: Zahlung freigeben]
   end
 
-  %% === BACKEND ===
   subgraph Backend
     PAIN[pain.001 Generator]
     EBICS[EBICS Sende-Einheit]
@@ -191,21 +187,18 @@ graph TD
     DB[(PostgreSQL Datenbank)]
   end
 
-  %% === ADMIN-SYSTEM ===
-  subgraph Admin-System (Meta-Ebene)
+  subgraph AdminSystem
     ADMIN_UI[Admin-Dashboard]
     ADMIN_BACK[Meta-Controller & Audit]
     POLICIES[Compliance-Policies]
     ROUTING[Routing & Queue Mgmt]
   end
 
-  %% === EXTERNE BANKEN ===
-  subgraph Externe Bank
+  subgraph Bank
     BANK_API[Bankschnittstelle (EBICS)]
     CAMT[camt.053 Rückmeldung]
   end
 
-  %% === INFRASTRUKTUR ===
   subgraph Infrastruktur
     AWS[AWS Frankfurt]
     LOGS[CloudWatch Logs]
@@ -213,25 +206,16 @@ graph TD
     ISO[ISO 27001 optional]
   end
 
-  %% === VERBINDUNGEN ===
-
-  %% Datenquellen zu Frontend
   KMU --> OCR --> AGENTS
   DEV --> MAN --> AGENTS
   SHOPS --> OCR
   SOLO --> MAN
-
-  %% Frontend zu Backend
   AGENTS --> TODO --> PAIN --> EBICS --> BANK_API
   BANK_API --> CAMT --> STATUS --> DB
-
-  %% Admin Layer beobachtet & verbindet alles
   ADMIN_UI --> ADMIN_BACK --> ROUTING --> EBICS
   ROUTING --> AGENTS
   ROUTING --> BANK_API
   ADMIN_BACK --> POLICIES --> LOGS
-
-  %% Backend Logging & Compliance
   STATUS --> LOGS
   AWS --> LOGS
   LOGS --> DSGVO
