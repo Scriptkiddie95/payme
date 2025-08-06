@@ -315,7 +315,7 @@ graph TD
 
   %% Netzarchitektur
   subgraph AWSVPC
-    subgraph PublicSubnet[Public Subnet (DMZ)]
+    subgraph PublicSubnet-Public-Subnet-DMZ
       ALB[Application Load Balancer]
       CI_CD[(CI/CD Gateway z. B. GitHub Actions, CodeDeploy)]
     end
