@@ -26,7 +26,7 @@ graph TD
   F -->|camt.053/054| G[EBICS Client]
   G --> H[ISO20022 Parser]
   H --> I[Mapped Output for DUO]
-  I --> J[DUO Adapter (Upload)]
+  I --> J[DUO Upload]
 ```
 
 ### 📥 Zusatzgraph: Automatischer DUO → System Hero Importpfad
@@ -37,9 +37,9 @@ graph TD
   B1 --> C1[ZIP-Extraktion + Validierung]
   C1 --> D1[CSV/XLSX Parser]
   D1 --> E1[mappings.json Lookup]
-  E1 --> F1[Interne Datenbank (z. B. PostgreSQL)]
-  F1 --> G1[Webhook → Zahlungsmodul / Buchhaltung]
-  G1 --> H1[Transaktions-Dashboard / API-Ausgabe]
+  E1 --> F1[PostgreSQL Import]
+  F1 --> G1[Webhook → Zahlungsmodul]
+  G1 --> H1[Dashboard/API]
 ```
 
 > Dieser Graph zeigt, wie DUO-Exporte automatisch in dein Finanzsystem importiert werden können – z. B. für Lohnbuchhaltung, Kreditoren oder interne Zahlungsauslösung.
