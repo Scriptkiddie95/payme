@@ -424,6 +424,61 @@ Wähl 1–3 oder sag was du brauchst.
 | Testcases, Validatoren, Helper                       | 300                      |
 | DevOps Scripts, Deploy Pipelines                     | 200                      |
 
+## Roadmap Quellcode: 
+```mermaid
+flowchart TD
+    %% ➊ Governance & Security Foundation
+    step1["1  Establish ISMS scope & policies<br/>
+            <b>Tech:</b> Confluence + Jira, ISO 27001 toolkit, GitHub Docs"]
+    step2["2  Model roles & access control (Model A)<br/>
+            <b>Tech:</b> Keycloak (OIDC), AWS IAM + SCP, RBAC"]    
+    %% ➋ Cloud & DevOps
+    step3["3  Provision AWS core (VPC, Subnets, SG)<br/>
+            <b>Tech:</b> Terraform, AWS CDK, AWS Config"]
+    step4["4  Deploy container platform & DB<br/>
+            <b>Tech:</b> EKS, Helm, Docker, PostgreSQL RDS"]
+    step5["5  Enable central logging/monitoring<br/>
+            <b>Tech:</b> CloudWatch, Prometheus, Grafana, GuardDuty"]
+    %% ➌ Backend Payments
+    step6["6  Implement pain.001 generator<br/>
+            <b>Tech:</b> Python (iso20022-lib), FastAPI"]
+    step7["7  Build EBICS sender service<br/>
+            <b>Tech:</b> Python ebics-client, Celery, SQS"]
+    step8["8  Parse camt.053 & update status<br/>
+            <b>Tech:</b> Python xmltodict, SQLAlchemy"]
+    %% ➍ Frontend & Workflow
+    step9["9  Create React dashboard<br/>
+            <b>Tech:</b> Next.js, Tailwind, React Query"]
+    step10["10  Integrate OCR & agent sorting<br/>
+             <b>Tech:</b> AWS Textract, LangChain, S3"]
+    step11["11  Build payment-approval UI<br/>
+             <b>Tech:</b> State Machines (XState), GraphQL API"]
+    %% ➎ Admin Meta-System
+    step12["12  Add admin dashboard & audits<br/>
+             <b>Tech:</b> React, Keycloak-admin, CloudTrail"]
+    step13["13  Implement compliance rule engine<br/>
+             <b>Tech:</b> Open Policy Agent, Python"]
+    %% ➏ Integration & Messaging
+    step14["14  Wire services via event bus<br/>
+             <b>Tech:</b> AWS SNS/SQS, EventBridge"]
+    step15["15  Expose secure public API<br/>
+             <b>Tech:</b> API Gateway, Lambda authorizer, WAF"]
+    %% ➐ Continuous Compliance
+    step16["16  Automate security scans & IaC drift<br/>
+             <b>Tech:</b> AWS Inspector, Snyk, tfsec"]
+    step17["17  Run pen-tests & finalize ISO 27001 audit<br/>
+             <b>Tech:</b> OWASP ZAP, Nessus, External Auditor"]
+    %% ➑ Launch & Operations
+    step18["18  Go-live & ongoing ISO internal audits<br/>
+             <b>Tech:</b> CloudWatch Alarms, PagerDuty, SOC process"]
+
+    %% --- Flow order
+    step1 --> step2 --> step3 --> step4 --> step5 --> step6 --> step7 --> step8
+    step8 --> step14
+    step5 --> step9
+    step9 --> step10 --> step11 --> step14
+    step14 --> step12 --> step13 --> step15 --> step16 --> step17 --> step18
+```
 
 ## 🔧 Ziel erreicht?
 
