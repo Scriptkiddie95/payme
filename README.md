@@ -47,7 +47,38 @@ graph LR
   DB --> UI
   Update --> Logs
 ```
+```mermaid
+graph TD
 
+  subgraph Externe
+    DUO[DUO ZIP Export]
+    Bank[Bank camt Rückmeldung]
+  end
+
+  subgraph Backend
+    Unzip[ZIP entpacken]
+    Parse[CSV parsen]
+    Map[mapping.json anwenden]
+    DB[(PostgreSQL DB)]
+    Gen[pain.001 generieren]
+    Send[EBICS senden]
+    Recv[EBICS empfangen]
+    Camt[camt.053 verarbeiten]
+    Update[Status aktualisieren]
+    Archiv[DUO Archiv Update]
+  end
+
+  subgraph Frontend
+    UI[Dashboard]
+    Logs[Fehlerlogs]
+  end
+
+  DUO --> Unzip --> Parse --> Map --> DB
+  DB --> Gen --> Send --> Bank --> Recv --> Camt --> Update --> DB
+  Update --> Archiv --> DUO
+  DB --> UI
+  Update --> Logs
+```
 > Dieser Graph zeigt, wie DUO-Exporte automatisch in dein Finanzsystem importiert werden können – z. B. für Lohnbuchhaltung, Kreditoren oder interne Zahlungsauslösung.
 
 ---
