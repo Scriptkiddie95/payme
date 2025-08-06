@@ -211,6 +211,25 @@ Finanzplanung und ToDo's in den nächsten zwei Wochen
 
 ---
 
+## Projekt Umfang bis zum Status Marktreif
+
+| Modul                                                | ⬇️ Geschätzte Codezeilen |
+| ---------------------------------------------------- | ------------------------ |
+| EBICS-Client (z. B. `node-ebics` Wrapper)            | 600                      |
+| ISO20022 Generator & Parser (`pain.001`, `camt.053`) | 800                      |
+| Zertifikatsmanagement + Keyhandling                  | 300                      |
+| DUO / Lexware Import (ZIP, CSV/XLSX, Validierung)    | 400                      |
+| mappings.json & DataMapper                           | 150                      |
+| PostgreSQL Datenbank-Anbindung                       | 200                      |
+| Webhook-Trigger + Cronjobs                           | 150                      |
+| ToDo-Portal mit Freigabe-Logik (z. B. CEO UI)        | 400                      |
+| Frontend-Dashboard (React, Tailwind, Auth)           | 800                      |
+| OCR-Integration Textract UI                          | 300                      |
+| CloudWatch Logging, Secrets Manager, DSGVO/AWS-Infra | 300                      |
+| Testcases, Validatoren, Helper                       | 300                      |
+| DevOps Scripts, Deploy Pipelines                     | 200                      |
+
+
 ## 🔧 Ziel erreicht?
 
 > Wenn System Hero Zahlungen senden, empfangen, auswerten und rechtssicher speichern kann – ohne manuelles Eingreifen.
