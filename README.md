@@ -317,7 +317,7 @@ graph TD
   subgraph VPC[(Amazon VPC Isolierter Bereich)]
     subgraph PublicSubnet[Public Subnet (DMZ)]
       ALB[Application Load Balancer]
-      CI_CD[CI/CD Gateway (z. B. GitHub Actions, CodeDeploy)]
+      CI_CD[(CI/CD Gateway z. B. GitHub Actions, CodeDeploy)]
     end
 
     subgraph PrivateSubnet[(Private Subnet Sicherheitszone)]
