@@ -233,7 +233,80 @@ graph TD
 ```
 
 Finanzplanung und ToDo's in den nächsten zwei Wochen
+Graph LR Darstellung: 
+```mermaid
+graph LR
+  subgraph Zielgruppe
+    KMU[KMU]
+    DEV[Entwickler]
+    SHOPS[Shops / E-Commerce]
+    SOLO[Selbstständige]
+  end
 
+  subgraph Datenquelle
+    OCR[OCR Textract optional]
+    MAN[Manuelle Eingabe]
+  end
+
+  subgraph Frontend
+    UI[Benutzer-Oberfläche]
+    AGENTS[Agenten sortieren Belege]
+    TODO[ToDo: Zahlung freigeben]
+  end
+
+  subgraph Backend
+    PAIN[pain.001 Generator]
+    EBICS[EBICS Sende-Einheit]
+    STATUS[Zahlungsstatus speichern]
+    DB[PostgreSQL Datenbank]
+  end
+
+  subgraph AdminSystem
+    ADMIN_UI[Admin-Dashboard]
+    ADMIN_BACK[Meta-Controller & Audit]
+    POLICIES[Compliance-Policies]
+    ROUTING[Routing & Queue Mgmt]
+  end
+
+  subgraph Bank
+    BANK_API[Bankschnittstelle EBICS]
+    CAMT[camt.053 Rückmeldung]
+  end
+
+  subgraph Infrastruktur
+    AWS[AWS Frankfurt]
+    LOGS[CloudWatch Logs]
+    DSGVO[DSGVO Konzept]
+    ISO[ISO 27001 optional]
+  end
+
+  KMU --> OCR
+  DEV --> MAN
+  SHOPS --> OCR
+  SOLO --> MAN
+  OCR --> AGENTS
+  MAN --> AGENTS
+  AGENTS --> TODO
+  TODO --> PAIN
+  PAIN --> EBICS
+  EBICS --> BANK_API
+  BANK_API --> CAMT
+  CAMT --> STATUS
+  STATUS --> DB
+
+  ADMIN_UI --> ADMIN_BACK
+  ADMIN_BACK --> ROUTING
+  ROUTING --> EBICS
+  ROUTING --> AGENTS
+  ROUTING --> BANK_API
+  ADMIN_BACK --> POLICIES
+  POLICIES --> LOGS
+  STATUS --> LOGS
+  AWS --> LOGS
+  LOGS --> DSGVO
+  AWS --> DSGVO
+  AWS --> ISO
+```
 
 ---
 
