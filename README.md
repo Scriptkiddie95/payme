@@ -16,7 +16,7 @@ Eine modulare, sichere Node.js-Anwendung, die folgendes leistet:
 
 ## 🌐 Architektur (Mermaid Diagramm)
 
-flowchart TD
+graph TD
 
 DUO_EXPORT[DATEV Unternehmen Online Export (ZIP)] --> ZIP_EXTRACT[Entpacken + Validieren]
 ZIP_EXTRACT --> CSV_PARSE[CSV/XLSX parsen]
@@ -37,6 +37,7 @@ DB_STORE --> DUO_SYNC[DUO Archiv Upload]
 DUO_SYNC --> DUO_EXPORT
 CAMT_PARSE --> LOGGING[Fehler + Logging]
 DB_STORE --> DASHBOARD[Status API / Monitoring]
+
 
 
 > Dieser Graph zeigt, wie DUO-Exporte automatisch in dein Finanzsystem importiert werden können – z. B. für Lohnbuchhaltung, Kreditoren oder interne Zahlungsauslösung.
